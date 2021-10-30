@@ -7,6 +7,9 @@ import com.example.storeapp.representationmodel.UserModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @Component
 public class UserModelAssembler
         extends RepresentationModelAssemblerSupport<User, UserModel> {
@@ -17,6 +20,15 @@ public class UserModelAssembler
 
     @Override
     public UserModel toModel(User entity) {
-        return null;
+        UserModel userModel = instantiateModel(entity);
+
+        userModel.add(linkTo(methodOn(UserController.class)
+        .retrieveUser(entity.getId()))
+        .withSelfRel());
+
+        userModel.setId(entity.getId());
+        userModel.setPassword(entity.getPassword());
+
+        return userModel;
     }
 }
