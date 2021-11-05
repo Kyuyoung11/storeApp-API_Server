@@ -15,7 +15,8 @@ import org.springframework.hateoas.server.core.Relation;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserModel extends RepresentationModel<UserModel> {
 
-    private String id;
-    private String password;
+    private Long id;
+    private String name;
+    private String pw;
 
 }

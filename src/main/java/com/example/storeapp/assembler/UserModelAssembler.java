@@ -27,7 +27,7 @@ public class UserModelAssembler
         .withSelfRel());
 
         userModel.setId(entity.getId());
-        userModel.setPassword(entity.getPassword());
+        userModel.setPw(entity.getPw());
 
         return userModel;
     }

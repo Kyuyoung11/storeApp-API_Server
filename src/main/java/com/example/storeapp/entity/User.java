@@ -12,14 +12,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class User extends  AbstractEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @Column(name="name", nullable = false)
+    private String name;
 
-    @Column(name="password", nullable = false)
-    private String password;
+    @Column(name="pw", nullable = false)
+    private String pw;
 
 
 }
