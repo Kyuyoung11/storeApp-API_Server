@@ -49,6 +49,12 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @RequestMapping(path = "/{name}/exists", method = RequestMethod.GET)
+    public boolean retrieveUserbyName(@PathVariable String name) {
+        return userService.checkNameExists(name);
+    }
+
+
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> createUser(@RequestBody @Valid UserDto request) {
         User user = userService.createUser(request.getName(), request.getPw());

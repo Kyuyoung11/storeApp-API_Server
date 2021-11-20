@@ -28,4 +28,13 @@ public class UserServiceImpl implements UserService {
         user.setPw(pw);
         return userRepository.save(user);
     }
+
+
+    @Override
+    public boolean checkNameExists(String name) {
+        if (userRepository.findByName(name).isPresent()) {
+            return true;
+        }
+        return false;
+    }
 }
