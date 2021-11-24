@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Optional;
 
 
 
@@ -55,7 +56,20 @@ public class UserController {
     }
 
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(path = "/login", method = RequestMethod.POST)
+    public ResponseEntity<?> loginByName(@RequestBody @Valid UserDto request) {
+        Optional<User> user = userService.loginUser(request.getName(), request.getPw());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return user.map(userModelAssembler::toModel)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+
+    @RequestMapping(path = "/signup", method = RequestMethod.POST)
     public ResponseEntity<?> createUser(@RequestBody @Valid UserDto request) {
         User user = userService.createUser(request.getName(), request.getPw());
         UserModel userModel = userModelAssembler.toModel(user);

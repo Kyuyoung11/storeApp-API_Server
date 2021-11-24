@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
 
+
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
@@ -37,4 +38,14 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public Optional<User> loginUser(String name, String pw) {
+        if (!checkNameExists(name)) {
+            return null;
+        }
+        return userRepository.findUserByNameAndPw(name, pw);
+    }
+
+
 }
