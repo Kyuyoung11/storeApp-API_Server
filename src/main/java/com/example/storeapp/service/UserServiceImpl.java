@@ -41,9 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> loginUser(String name, String pw) {
-        if (!checkNameExists(name)) {
-            return null;
-        }
+
         return userRepository.findUserByNameAndPw(name, pw);
     }
 

@@ -1,10 +1,6 @@
 package com.example.storeapp.controller;
 
-
-import com.example.storeapp.assembler.UserModelAssembler;
 import com.example.storeapp.entity.User;
-import com.example.storeapp.repository.UserRepository;
-import com.example.storeapp.representationmodel.UserModel;
 import com.example.storeapp.service.UserService;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Optional;
@@ -38,16 +33,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserModelAssembler userModelAssembler;
 
     //json으로 통신
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> retrieveUser(@PathVariable Long id) {
-        return userService.findById(id)
-                .map(userModelAssembler::toModel)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<User> retrieveUser(@PathVariable Long id) {
+        Optional<User> user = userService.findById(id);
+        return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
     @RequestMapping(path = "/{name}/exists", method = RequestMethod.GET)
@@ -58,13 +49,14 @@ public class UserController {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> loginByName(@RequestBody @Valid UserDto request) {
+        if (!userService.checkNameExists(request.getName())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
         Optional<User> user = userService.loginUser(request.getName(), request.getPw());
-        if (user == null) {
+        if (!user.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return user.map(userModelAssembler::toModel)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
 
@@ -72,8 +64,7 @@ public class UserController {
     @RequestMapping(path = "/signup", method = RequestMethod.POST)
     public ResponseEntity<?> createUser(@RequestBody @Valid UserDto request) {
         User user = userService.createUser(request.getName(), request.getPw());
-        UserModel userModel = userModelAssembler.toModel(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
 
     }
 
