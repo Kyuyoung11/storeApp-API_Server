@@ -21,7 +21,8 @@ import java.util.Optional;
 URL: /api/product
 
 To get list of products:  GET "http://localhost:8080/api/products"
-To get products info by id:  GET "http://localhost:8080/api/products/{id}"
+To get products info by id:  GET "http://localhost:8080/api/products/get/{id}"
+To search products by words: GET "http://localhost:8080/api/products/search/{words}"
 */
 
 @RestController
@@ -46,18 +47,21 @@ public class ProductController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<Product> retrieveProduct(@PathVariable Long id) {
         Optional<Product> product = productService.getProductById(id);
         return new ResponseEntity<>(product.get(), HttpStatus.OK);
     }
-//    @RequestMapping(path = "/{words}", method = RequestMethod.GET)
-//    public ResponseEntity<?> searchProducts(@PathVariable String words) {
-//
-//        // Getting all products in application...
-//        final List<Product> products = productService.searchProducts();
-//
-//        return ResponseEntity.ok(
-//                productModelAssembler.toCollectionModel(products));
-//    }
+    @RequestMapping(path = "/search}", method = RequestMethod.POST)
+    public ResponseEntity<?> searchProducts(@PathVariable String words) {
+
+        // Getting all products in application...
+        List<Product> list = new ArrayList<>();
+        Iterable<Product> iterable = productService.searchProducts(words);
+        for (Product p : iterable) {
+            list.add(p);
+        }
+
+        return ResponseEntity.ok(list);
+    }
 }

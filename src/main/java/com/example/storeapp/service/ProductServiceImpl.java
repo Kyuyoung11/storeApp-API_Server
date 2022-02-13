@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> searchProducts() {
-        return null;
+    public List<Product> searchProducts(String words) {
+        return productRepository.searchProducts(words);
     }
 }
