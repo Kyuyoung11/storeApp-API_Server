@@ -37,6 +37,14 @@ public class Product extends AbstractEntity{
     private String detail;
 
 
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name="cart",
+            joinColumns = {@JoinColumn(name="userID", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name="bookID", referencedColumnName = "id")})
+    private List<User> users;
+
+
 
 
 }

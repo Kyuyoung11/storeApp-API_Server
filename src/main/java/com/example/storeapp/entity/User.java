@@ -4,6 +4,7 @@ package com.example.storeapp.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -19,6 +20,9 @@ public class User extends  AbstractEntity{
 
     @Column(name="pw", nullable = false)
     private String pw;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
+    private List<Product> products;
 
 
 }
