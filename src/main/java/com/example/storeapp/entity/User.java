@@ -4,6 +4,7 @@ package com.example.storeapp.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -21,8 +22,12 @@ public class User extends  AbstractEntity{
     @Column(name="pw", nullable = false)
     private String pw;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
-    private List<Product> products;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name="cart",
+            joinColumns = {@JoinColumn(name="userID", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name="bookID", referencedColumnName = "id")})
+    private List<Product> products = new ArrayList<>();
 
 
 }
